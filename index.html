@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="업무 영어">
+<title>업무 영어</title>
+<style>
+/* ===== 색상 (밝은 화면 / 어두운 화면) ===== */
+:root{
+  --bg:#f6f7f9; --card:#ffffff; --text:#1f2328; --sub:#667085; --line:#e4e7ec;
+  --accent:#2563eb; --accent-soft:#e8efff;
+  --ok:#16a34a; --ok-soft:#e7f6ec; --no:#dc2626; --no-soft:#fdecec; --mark:#fff3bf;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1115; --card:#181b21; --text:#e6e8eb; --sub:#9aa3af; --line:#2a2f37;
+    --accent:#6b9bff; --accent-soft:#1d2840;
+    --ok:#4ade80; --ok-soft:#15281c; --no:#f87171; --no-soft:#2e1717; --mark:#4a3f12;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--bg); color:var(--text);
+  font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  padding-bottom:calc(72px + env(safe-area-inset-bottom));
+}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 16px 6px;max-width:640px;margin:0 auto;display:flex;align-items:baseline;gap:8px}
+h1{font-size:20px;margin:0}
+h2{font-size:17px;margin:0 0 8px}
+h3{font-size:15px;margin:0 0 6px}
+.ver{color:var(--sub);font-size:12px}
+main{max-width:640px;margin:0 auto;padding:0 16px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+label.f{display:block;margin:14px 0 0}
+label.f>span{display:block;font-size:13px;color:var(--sub);margin-bottom:4px}
+.fhint{font-size:12px;color:var(--sub);margin-top:4px}
+input,textarea,select{width:100%;font:inherit;color:inherit;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{resize:vertical}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+
+button,.btn{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:10px;padding:10px 14px;cursor:pointer;display:inline-block}
+button:disabled{opacity:.45;cursor:default}
+.primary{background:var(--accent);color:#fff;border-color:var(--accent);width:100%;padding:13px;font-weight:600;margin-top:16px}
+.row{display:flex;gap:8px;margin-top:12px}
+.row>*{flex:1;text-align:center}
+.okbtn{background:var(--ok-soft);color:var(--ok);border-color:transparent;font-weight:600}
+.nobtn{background:var(--no-soft);color:var(--no);border-color:transparent;font-weight:600}
+.danger{color:var(--no)}
+.armed{background:var(--no);color:#fff;border-color:var(--no)}
+.link{border:0;background:none;color:var(--sub);padding:4px 0;text-decoration:underline}
+
+/* 두세 개 중 고르는 버튼 묶음 */
+.seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:transparent;padding:8px 6px}
+.seg button.on{background:var(--card);color:var(--accent);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+
+/* 아래쪽 탭 */
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:10}
+.tabs button{flex:1;border:0;border-radius:0;background:transparent;padding:16px 0;color:var(--sub);font-weight:600}
+.tabs button.on{color:var(--accent)}
+
+.msg{margin:12px 0 0;padding:10px 12px;border-radius:10px;font-size:14px}
+.msg.ok{background:var(--ok-soft);color:var(--ok)}
+.msg.err{background:var(--no-soft);color:var(--no)}
+.hint{font-size:13px;color:var(--sub)}
+.empty{text-align:center;color:var(--sub);padding:40px 0}
+
+/* 목록 */
+.toolbar{margin-top:12px;display:grid;gap:8px}
+.count{font-size:13px;color:var(--sub);margin:12px 0 0}
+.item{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+.item .top{display:flex;justify-content:space-between;align-items:center}
+.tag{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.tag.word{background:var(--ok-soft);color:var(--ok)}
+.icon{border:0;background:none;padding:4px 6px;font-size:18px}
+.en{font-size:17px;font-weight:600;margin:6px 0 2px;word-break:break-word}
+.ko{margin:0;color:var(--text)}
+.memo{margin:4px 0 0;font-size:13px;color:var(--sub)}
+.meta{margin:8px 0 0;font-size:12px;color:var(--sub)}
+.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+.actions button{padding:6px 12px;font-size:14px}
+mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 2px}
+
+/* 복습 */
+.big{font-size:34px;font-weight:700;margin:4px 0}
+.bar{height:8px;background:var(--bg);border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;background:var(--accent)}
+.runhead{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:14px;color:var(--sub)}
+.qlabel{font-size:13px;color:var(--sub);margin:0 0 8px}
+.qtext{font-size:20px;font-weight:600;margin:0 0 8px;word-break:break-word}
+.qhint{color:var(--sub);margin:0}
+.blank{display:inline-block;border-bottom:2px solid var(--accent);min-width:3ch;color:transparent;margin:0 2px}
+.banner{padding:10px 12px;border-radius:10px;font-weight:700;margin-bottom:12px}
+.banner.ok{background:var(--ok-soft);color:var(--ok)}
+.banner.no{background:var(--no-soft);color:var(--no)}
+.answer{margin:6px 0}
+.answer b{color:var(--sub);font-weight:500;font-size:13px;display:block}
+</style>
+</head>
+<body>
+<header><h1>업무 영어</h1><span class="ver">v1</span></header>
+<main id="app"></main>
+<nav class="tabs">
+  <button data-tab="add">추가</button>
+  <button data-tab="list">목록</button>
+  <button data-tab="review">복습</button>
+</nav>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===== 저장 이름표 (브라우저 안에 저장할 때 쓰는 이름) =====
+  var LS_ITEMS = 'be_items_v1';
+  var LS_SETTINGS = 'be_settings_v1';
+  // 맞힐 때마다 다음 복습까지 기다리는 날 수 (1일 → 2일 → 4일 ...)
+  var INTERVALS = [1, 2, 4, 7, 15, 30];
+
+  // ===== 작은 도우미 함수들 =====
+  function load(key, fallback) {
+    try { var v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+    catch (e) { return fallback; }
+  }
+  function store(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+    catch (e) { return false; }
+  }
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  // 오늘 날짜 문자열 (offset 만큼 날짜를 더함)
+  function dayStr(offset) {
+    var d = new Date();
+    d.setDate(d.getDate() + (offset || 0));
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+  // 화면에 글자를 안전하게 넣기 (<, > 같은 기호가 코드로 실행되지 않게)
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  // 정답 비교용: 대소문자, 마침표·쉼표, 띄어쓰기 차이는 무시
+  function norm(s) {
+    return String(s || '').toLowerCase()
+      .replace(/[’‘`]/g, "'")
+      .replace(/[.,!?;:"“”()]/g, '')
+      .replace(/\s+/g, ' ').trim();
+  }
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+
+  // ===== 앱 상태 (지금 화면에 필요한 모든 정보) =====
+  var S = {
+    tab: 'add',
+    items: load(LS_ITEMS, []),
+    settings: Object.assign({ daily: 10, mode: 'mix', doneDate: '', doneCount: 0 }, load(LS_SETTINGS, {})),
+    form: { type: 'sentence', en: '', ko: '', key: '', memo: '' },
+    msg: '', msgType: 'ok',
+    q: '', filter: 'all', editId: null, delArm: null,
+    run: null // 진행 중인 복습
+  };
+
+  function persist() {
+    if (!store(LS_ITEMS, S.items)) alert('저장 공간이 부족해서 저장하지 못했어. 백업을 먼저 해 줘.');
+  }
+  function saveSettings() { store(LS_SETTINGS, S.settings); }
+  function getItem(id) {
+    for (var i = 0; i < S.items.length; i++) if (S.items[i].id === id) return S.items[i];
+    return null;
+  }
+  // 날짜가 바뀌면 오늘 푼 개수를 0으로
+  function resetDaily() {
+    if (S.settings.doneDate !== dayStr()) {
+      S.settings.doneDate = dayStr();
+      S.settings.doneCount = 0;
+      saveSettings();
+    }
+  }
+  // 오늘까지 복습할 차례가 된 항목 (오래 밀린 것, 많이 틀린 것 먼저)
+  function dueItems() {
+    var today = dayStr();
+    return S.items.filter(function (it) { return it.due <= today; })
+      .sort(function (a, b) {
+        if (a.due !== b.due) return a.due < b.due ? -1 : 1;
+        return b.wrong - a.wrong;
+      });
+  }
+
+  // 문장에서 가릴 부분 찾기: 핵심 표현이 있으면 그것, 없으면 가장 긴 단어
+  function blankInfo(it) {
+    var en = it.en, key = it.key || '', i = -1;
+    if (key) i = en.toLowerCase().indexOf(key.toLowerCase());
+    if (i < 0) {
+      var words = en.match(/[A-Za-z][A-Za-z'-]*/g) || [];
+      key = words.reduce(function (a, w) { return w.length > a.length ? w : a; }, '');
+      if (!key) return { before: '', answer: en, after: '' };
+      i = en.indexOf(key);
+    }
+    return { before: en.slice(0, i), answer: en.substr(i, key.length), after: en.slice(i + key.length) };
+  }
+  // 단어 힌트: headcount → h________
+  function letterHint(en) {
+    return en.split(' ').map(function (w) {
+      return w.charAt(0) + w.slice(1).replace(/[A-Za-z]/g, '_');
+    }).join('  ');
+  }
+  // 목록에서 핵심 표현에 형광펜 칠하기
+  function highlight(en, key) {
+    if (!key) return esc(en);
+    var i = en.toLowerCase().indexOf(key.toLowerCase());
+    if (i < 0) return esc(en);
+    return esc(en.slice(0, i)) + '<mark>' + esc(en.substr(i, key.length)) + '</mark>' + esc(en.slice(i + key.length));
+  }
+  // 미국식 발음으로 읽어주기 (기기 내장 음성)
+  function speak(text) {
+    try {
+      if (!('speechSynthesis' in window)) return;
+      speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US'; u.rate = 0.95;
+      speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+
+  // ===== 화면 그리기 =====
+  var $app = document.getElementById('app');
+
+  function render() {
+    var html;
+    if (S.tab === 'add') html = viewAdd();
+    else if (S.tab === 'list') html = viewList();
+    else html = S.run ? viewRun() : viewReviewHome();
+    $app.innerHTML = html;
+    var tabs = document.querySelectorAll('.tabs button');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('on', tabs[i].dataset.tab === S.tab);
+    if (S.tab === 'list') renderListBody();
+    var f = document.querySelector('[data-autofocus]');
+    if (f) f.focus();
+  }
+
+  function field(label, inner, hint) {
+    return '<label class="f"><span>' + label + '</span>' + inner +
+      (hint ? '<div class="fhint">' + hint + '</div>' : '') + '</label>';
+  }
+  function segBtn(act, value, current, text) {
+    return '<button data-act="' + act + '" data-v="' + value + '" class="' + (value === current ? 'on' : '') + '">' + text + '</button>';
+  }
+
+  // ----- 추가 화면 -----
+  function viewAdd() {
+    var f = S.form, isS = f.type === 'sentence';
+    return '<section class="card">' +
+      '<div class="seg">' + segBtn('ftype', 'word', f.type, '단어·숙어') + segBtn('ftype', 'sentence', f.type, '문장') + '</div>' +
+      field('영어', '<textarea data-f="en" rows="' + (isS ? 3 : 1) + '" placeholder="' +
+        (isS ? '예: Could you please confirm by Friday?' : '예: headcount') + '">' + esc(f.en) + '</textarea>') +
+      field('한글 뜻', '<textarea data-f="ko" rows="2" placeholder="' +
+        (isS ? '예: 금요일까지 확인 부탁드립니다.' : '예: 인원수, 정원') + '">' + esc(f.ko) + '</textarea>') +
+      (isS ? field('핵심 표현 (선택)', '<input data-f="key" value="' + esc(f.key) + '" placeholder="예: confirm by">',
+        '빈칸 문제에서 가려질 부분이야. 비워두면 가장 긴 단어를 가려.') : '') +
+      field('메모 (선택)', '<input data-f="memo" value="' + esc(f.memo) + '" placeholder="예: 납기 확인 메일에서">') +
+      (S.msg ? '<p class="msg ' + S.msgType + '">' + esc(S.msg) + '</p>' : '') +
+      '<button class="primary" data-act="save">저장</button>' +
+      '</section>' +
+      '<p class="hint">저장한 내용은 이 기기 브라우저 안에만 남아. 사람 이름, 거래처명, 금액은 빼고 넣어 줘.</p>';
+  }
+
+  function setMsg(text, type) { S.msg = text; S.msgType = type; render(); }
+
+  // 저장 전 확인 (추가와 수정에서 같이 씀). 문제가 있으면 안내 문구를 돌려줌
+  function validate(en, ko, key, selfId) {
+    if (!en || !ko) return '영어와 한글 뜻을 둘 다 적어 줘.';
+    var dup = S.items.some(function (it) { return it.id !== selfId && norm(it.en) === norm(en); });
+    if (dup) return '이미 저장된 표현이야. 목록에서 찾아서 수정해 줘.';
+    if (key && en.toLowerCase().indexOf(key.toLowerCase()) < 0) return '핵심 표현이 영어 문장 안에 없어. 철자를 확인해 줘.';
+    return '';
+  }
+
+  function saveItem() {
+    var f = S.form;
+    var en = f.en.trim(), ko = f.ko.trim(), key = f.type === 'sentence' ? f.key.trim() : '';
+    var err = validate(en, ko, key, null);
+    if (err) return setMsg(err, 'err');
+    S.items.unshift({
+      id: uid(), type: f.type, en: en, ko: ko, key: key, memo: f.memo.trim(),
+      createdAt: Date.now(), level: 0, due: dayStr(), right: 0, wrong: 0
+    });
+    persist();
+    S.form = { type: f.type, en: '', ko: '', key: '', memo: '' };
+    setMsg('저장했어! 오늘 복습에 바로 들어가.', 'ok');
+    var first = document.querySelector('[data-f="en"]');
+    if (first) first.focus();
+  }
+
+  // ----- 목록 화면 -----
+  function viewList() {
+    return '<section class="toolbar">' +
+      '<input type="search" data-list="q" placeholder="검색 (영어, 한글, 메모)" value="' + esc(S.q) + '">' +
+      '<div class="seg">' + segBtn('filter', 'all', S.filter, '전체') + segBtn('filter', 'word', S.filter, '단어·숙어') +
+      segBtn('filter', 'sentence', S.filter, '문장') + '</div>' +
+      '</section>' +
+      '<div id="listBody"></div>' +
+      '<section class="card"><h3>백업</h3>' +
+      '<p class="hint" style="margin-top:0">폰과 컴퓨터의 목록은 따로 저장돼. 내보내기로 만든 파일을 다른 기기에서 가져오면 옮겨져.</p>' +
+      '<div class="row"><button data-act="export">내보내기</button>' +
+      '<label class="btn">가져오기<input type="file" accept=".json,application/json" data-file="import" hidden></label></div>' +
+      '</section>';
+  }
+
+  // 검색할 때 입력칸이 깜빡이지 않게, 목록 부분만 다시 그림
+  function renderListBody() {
+    var el = document.getElementById('listBody');
+    if (!el) return;
+    var q = norm(S.q);
+    var list = S.items.filter(function (it) {
+      if (S.filter !== 'all' && it.type !== S.filter) return false;
+      return !q || norm(it.en + ' ' + it.ko + ' ' + (it.memo || '')).indexOf(q) >= 0;
+    });
+    if (!list.length) {
+      el.innerHTML = '<p class="empty">' + (S.items.length ? '찾는 항목이 없어.' : '아직 저장한 게 없어. 추가 탭에서 넣어 봐.') + '</p>';
+      return;
+    }
+    el.innerHTML = '<p class="count">' + list.length + '개</p>' + list.map(itemCard).join('');
+  }
+
+  function itemCard(it) {
+    var tag = it.type === 'word' ? '<span class="tag word">단어·숙어</span>' : '<span class="tag">문장</span>';
+    if (S.editId === it.id) {
+      return '<article class="item" data-id="' + it.id + '">' +
+        field('종류', '<select data-e="type"><option value="word"' + (it.type === 'word' ? ' selected' : '') + '>단어·숙어</option>' +
+          '<option value="sentence"' + (it.type === 'sentence' ? ' selected' : '') + '>문장</option></select>') +
+        field('영어', '<textarea data-e="en" rows="2">' + esc(it.en) + '</textarea>') +
+        field('한글 뜻', '<textarea data-e="ko" rows="2">' + esc(it.ko) + '</textarea>') +
+        field('핵심 표현', '<input data-e="key" value="' + esc(it.key) + '">', '문장일 때만 써.') +
+        field('메모', '<input data-e="memo" value="' + esc(it.memo) + '">') +
+        '<div class="actions"><button data-act="cancelEdit">취소</button>' +
+        '<button class="okbtn" data-act="saveEdit" data-id="' + it.id + '">수정 저장</button></div>' +
+        '</article>';
+    }
+    var armed = S.delArm === it.id;
+    return '<article class="item" data-id="' + it.id + '">' +
+      '<div class="top">' + tag + '<button class="icon" data-act="speak" data-id="' + it.id + '" aria-label="발음 듣기">🔊</button></div>' +
+      '<p class="en">' + highlight(it.en, it.key) + '</p>' +
+      '<p class="ko">' + esc(it.ko) + '</p>' +
+      (it.memo ? '<p class="memo">' + esc(it.memo) + '</p>' : '') +
+      '<p class="meta">맞힘 ' + it.right + ' · 틀림 ' + it.wrong + ' · 다음 복습 ' + it.due + '</p>' +
+      '<div class="actions"><button data-act="edit" data-id="' + it.id + '">수정</button>' +
+      '<button class="' + (armed ? 'armed' : 'danger') + '" data-act="del" data-id="' + it.id + '">' +
+      (armed ? '한 번 더 누르면 삭제' : '삭제') + '</button></div>' +
+      '</article>';
+  }
+
+  function saveEdit(id) {
+    var it = getItem(id);
+    var box = document.querySelector('.item[data-id="' + id + '"]');
+    if (!it || !box) return;
+    function g(name) { return box.querySelector('[data-e="' + name + '"]').value.trim(); }
+    var type = g('type'), en = g('en'), ko = g('ko'), memo = g('memo');
+    var key = type === 'sentence' ? g('key') : '';
+    var err = validate(en, ko, key, id);
+    if (err) { alert(err); return; }
+    it.type = type; it.en = en; it.ko = ko; it.key = key; it.memo = memo;
+    persist();
+    S.editId = null;
+    renderListBody();
+  }
+
+  // ----- 복습 첫 화면 -----
+  function viewReviewHome() {
+    resetDaily();
+    var st = S.settings, done = st.doneCount;
+    var left = Math.max(0, st.daily - done);
+    var due = dueItems().length;
+    var pct = Math.min(100, Math.round(done / st.daily * 100));
+    var startText = !S.items.length ? '먼저 추가 탭에서 넣어 줘'
+      : left === 0 ? '오늘 목표 달성! 🎉'
+      : due === 0 ? '오늘 복습할 차례인 게 없어'
+      : '복습 시작 (' + Math.min(left, due) + '개)';
+    return '<section class="card">' +
+      '<h2>오늘의 복습</h2>' +
+      '<div class="big">' + done + ' / ' + st.daily + '</div>' +
+      '<div class="bar"><i style="width:' + pct + '%"></i></div>' +
+      '<p class="hint">복습 차례가 된 항목 ' + due + '개 · 전체 ' + S.items.length + '개</p>' +
+      '<button class="primary" data-act="start"' + (left && due ? '' : ' disabled') + '>' + startText + '</button>' +
+      '</section>' +
+      '<section class="card"><h3>설정</h3>' +
+      field('하루 복습 개수', '<input type="number" inputmode="numeric" min="1" max="200" data-set="daily" value="' + st.daily + '">') +
+      '<label class="f"><span>퀴즈 방식</span><div class="seg">' +
+      segBtn('mode', 'mix', st.mode, '섞어서') + segBtn('mode', 'blank', st.mode, '빈칸 채우기') + segBtn('mode', 'trans', st.mode, '해석하기') +
+      '</div></label>' +
+      '</section>' +
+      '<section class="card"><h3>자유 연습</h3>' +
+      '<p class="hint" style="margin-top:0">전체에서 10개를 무작위로 풀어. 복습 일정에는 영향이 없어.</p>' +
+      '<button data-act="free"' + (S.items.length ? '' : ' disabled') + ' style="width:100%">자유 연습 시작</button>' +
+      '</section>';
+  }
+
+  function pickKind() {
+    var m = S.settings.mode;
+    if (m === 'blank' || m === 'trans') return m;
+    return Math.random() < 0.5 ? 'blank' : 'trans';
+  }
+
+  function startRun(scheduled) {
+    var pick;
+    if (scheduled) {
+      resetDaily();
+      var left = Math.max(0, S.settings.daily - S.settings.doneCount);
+      pick = shuffle(dueItems().slice(0, left));
+    } else {
+      pick = shuffle(S.items.slice()).slice(0, 10);
+    }
+    if (!pick.length) return;
+    S.run = {
+      scheduled: scheduled,
+      queue: pick.map(function (it) { return { id: it.id, kind: pickKind(), retry: false }; }),
+      first: pick.length, idx: 0, state: 'ask', input: '', ok: null, right: 0, wrong: 0
+    };
+    render();
+  }
+
+  // ----- 복습 진행 화면 -----
+  function viewRun() {
+    var r = S.run;
+    // 복습 중에 지워진 항목은 건너뜀
+    while (r.idx < r.queue.length && !getItem(r.queue[r.idx].id)) r.idx++;
+    if (r.idx >= r.queue.length) return viewResult();
+    var cur = r.queue[r.idx], it = getItem(cur.id);
+    var head = '<div class="runhead"><span>' + (r.idx + 1) + ' / ' + r.queue.length +
+      (cur.retry ? ' · 다시 풀기' : '') + '</span><button class="link" data-act="stop">그만하기</button></div>';
+    return head + '<section class="card">' + (cur.kind === 'blank' ? viewBlank(it, r) : viewTrans(it, r)) + '</section>';
+  }
+
+  // 빈칸 채우기: 문장은 핵심 표현을, 단어는 한글 뜻을 보고 영어를 씀
+  function viewBlank(it, r) {
+    var isWord = it.type === 'word';
+    var b = isWord ? { answer: it.en } : blankInfo(it);
+    if (r.state === 'ask') {
+      var q = isWord
+        ? '<p class="qlabel">이 뜻의 영어는?</p><p class="qtext">' + esc(it.ko) + '</p><p class="qhint">힌트: ' + esc(letterHint(it.en)) + '</p>'
+        : '<p class="qlabel">빈칸에 들어갈 표현은?</p><p class="qtext">' + esc(b.before) +
+          '<span class="blank" style="min-width:' + Math.max(3, b.answer.length) + 'ch">.</span>' + esc(b.after) +
+          '</p><p class="qhint">' + esc(it.ko) + '</p>';
+      return q +
+        '<input data-run="input" data-autofocus autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="영어로 입력" style="margin-top:14px" value="' + esc(r.input) + '">' +
+        '<div class="row"><button data-act="giveup">모르겠어</button><button class="primary" style="margin:0" data-act="check">확인</button></div>';
+    }
+    return resultBlock(it, r.ok,
+      '<div class="answer"><b>정답</b>' + esc(b.answer) + '</div>' +
+      (!r.ok && r.input.trim() ? '<div class="answer"><b>내 답</b>' + esc(r.input) + '</div>' : ''));
+  }
+
+  // 영문 보고 해석: 떠올린 뒤 정답을 보고 스스로 채점
+  function viewTrans(it, r) {
+    var top = '<p class="qlabel">무슨 뜻일까? 머릿속으로 해석한 뒤 정답을 봐.</p>' +
+      '<p class="qtext">' + esc(it.en) + ' <button class="icon" data-act="speak" data-id="' + it.id + '">🔊</button></p>';
+    if (r.state === 'ask') {
+      return top + '<button class="primary" data-act="reveal">정답 보기</button>';
+    }
+    return top + '<div class="answer"><b>한글 뜻</b>' + esc(it.ko) + '</div>' +
+      (it.memo ? '<p class="memo">' + esc(it.memo) + '</p>' : '') +
+      '<div class="row"><button class="nobtn" data-act="self" data-v="0">틀렸어</button>' +
+      '<button class="okbtn" data-act="self" data-v="1">맞았어</button></div>';
+  }
+
+  function resultBlock(it, ok, extra) {
+    return '<div class="banner ' + (ok ? 'ok' : 'no') + '">' + (ok ? '정답!' : '아쉬워, 끝에 한 번 더 나와') + '</div>' +
+      extra +
+      '<div class="answer"><b>전체</b>' + highlight(it.en, it.type === 'word' ? '' : blankInfo(it).answer) +
+      ' <button class="icon" data-act="speak" data-id="' + it.id + '">🔊</button></div>' +
+      '<div class="answer"><b>뜻</b>' + esc(it.ko) + '</div>' +
+      '<button class="primary" data-act="next" data-autofocus>다음</button>';
+  }
+
+  function viewResult() {
+    var r = S.run;
+    var pct = r.first ? Math.round(r.right / r.first * 100) : 0;
+    return '<section class="card" style="margin-top:12px">' +
+      '<h2>' + (r.scheduled ? '오늘 복습 끝!' : '자유 연습 끝!') + '</h2>' +
+      '<div class="big">' + pct + '%</div>' +
+      '<p class="hint">처음 풀 때 맞힘 ' + r.right + ' · 틀림 ' + r.wrong + '</p>' +
+      (r.scheduled ? '<p class="hint">틀린 건 내일 다시 나오고, 맞힌 건 며칠 뒤에 다시 나와.</p>' : '') +
+      '<button class="primary" data-act="stop">처음으로</button></section>';
+  }
+
+  // 채점 결과 기록 + 다음 복습 날짜 정하기
+  function grade(ok) {
+    var r = S.run, cur = r.queue[r.idx], it = getItem(cur.id);
+    r.ok = ok; r.state = 'done';
+    if (!it || cur.retry) return; // 다시 풀기는 기록하지 않음
+    if (ok) { r.right++; it.right++; } else { r.wrong++; it.wrong++; }
+    if (r.scheduled) {
+      if (ok) {
+        it.due = dayStr(INTERVALS[Math.min(it.level, INTERVALS.length - 1)]);
+        it.level++;
+      } else {
+        it.level = 0;
+        it.due = dayStr(1);
+      }
+      resetDaily();
+      S.settings.doneCount++;
+      saveSettings();
+    }
+    if (!ok) r.queue.push({ id: it.id, kind: cur.kind, retry: true });
+    persist();
+  }
+
+  function checkBlank(giveUp) {
+    var r = S.run;
+    if (!r || r.state !== 'ask') return;
+    var it = getItem(r.queue[r.idx].id);
+    if (!giveUp && !r.input.trim()) return;
+    var answer = it.type === 'word' ? it.en : blankInfo(it).answer;
+    grade(!giveUp && norm(r.input) === norm(answer));
+    render();
+  }
+
+  function nextQ() {
+    var r = S.run;
+    r.idx++; r.state = 'ask'; r.input = ''; r.ok = null;
+    render();
+    window.scrollTo(0, 0);
+  }
+
+  // ===== 백업 =====
+  function exportData() {
+    var data = { app: 'biz-english', version: 1, exportedAt: new Date().toISOString(), items: S.items };
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'biz-english-backup-' + dayStr() + '.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  }
+
+  function importFile(file) {
+    var rd = new FileReader();
+    rd.onload = function () {
+      try {
+        var d = JSON.parse(rd.result);
+        var arr = Array.isArray(d) ? d : d.items;
+        if (!Array.isArray(arr)) throw new Error('형식');
+        var have = {}, added = 0;
+        S.items.forEach(function (it) { have[norm(it.en)] = true; });
+        arr.forEach(function (x) {
+          if (!x || !x.en || !x.ko || have[norm(x.en)]) return;
+          have[norm(x.en)] = true;
+          S.items.push({
+            id: x.id || uid(), type: x.type === 'word' ? 'word' : 'sentence',
+            en: String(x.en), ko: String(x.ko), key: x.key || '', memo: x.memo || '',
+            createdAt: x.createdAt || Date.now(), level: x.level | 0, due: x.due || dayStr(),
+            right: x.right | 0, wrong: x.wrong | 0
+          });
+          added++;
+        });
+        persist();
+        alert(added + '개를 가져왔어. 이미 있는 영어 표현은 건너뛰었어.');
+        render();
+      } catch (e) {
+        alert('백업 파일을 읽지 못했어. 내보내기로 만든 파일인지 확인해 줘.');
+      }
+    };
+    rd.readAsText(file);
+  }
+
+  // ===== 버튼 누름, 글자 입력 처리 =====
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-act],[data-tab]');
+    if (!t || t.disabled) return;
+    if (t.dataset.tab) {
+      S.tab = t.dataset.tab; S.msg = ''; S.editId = null; S.delArm = null;
+      render(); window.scrollTo(0, 0);
+      return;
+    }
+    var id = t.dataset.id, v = t.dataset.v;
+    switch (t.dataset.act) {
+      case 'ftype': S.form.type = v; S.msg = ''; render(); break;
+      case 'save': saveItem(); break;
+      case 'filter': S.filter = v; render(); break;
+      case 'speak': var it = getItem(id); if (it) speak(it.en); break;
+      case 'edit': S.editId = id; S.delArm = null; renderListBody(); break;
+      case 'cancelEdit': S.editId = null; renderListBody(); break;
+      case 'saveEdit': saveEdit(id); break;
+      case 'del':
+        if (S.delArm === id) {
+          S.items = S.items.filter(function (x) { return x.id !== id; });
+          S.delArm = null; persist();
+        } else {
+          S.delArm = id;
+          setTimeout(function () { if (S.delArm === id) { S.delArm = null; renderListBody(); } }, 3000);
+        }
+        renderListBody();
+        break;
+      case 'export': exportData(); break;
+      case 'mode': S.settings.mode = v; saveSettings(); render(); break;
+      case 'start': startRun(true); break;
+      case 'free': startRun(false); break;
+      case 'check': checkBlank(false); break;
+      case 'giveup': checkBlank(true); break;
+      case 'reveal': S.run.state = 'reveal'; render(); break;
+      case 'self': grade(v === '1'); nextQ(); break;
+      case 'next': nextQ(); break;
+      case 'stop': S.run = null; render(); break;
+    }
+  });
+
+  document.addEventListener('input', function (e) {
+    var t = e.target;
+    if (t.dataset.f) S.form[t.dataset.f] = t.value;
+    else if (t.dataset.list === 'q') { S.q = t.value; renderListBody(); }
+    else if (t.dataset.run === 'input' && S.run) S.run.input = t.value;
+  });
+
+  document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.dataset.set === 'daily') {
+      var n = parseInt(t.value, 10);
+      if (!(n >= 1)) n = 10;
+      if (n > 200) n = 200;
+      S.settings.daily = n; saveSettings(); render();
+    }
+    if (t.dataset.file === 'import' && t.files && t.files[0]) { importFile(t.files[0]); t.value = ''; }
+  });
+
+  // 빈칸 입력칸에서 엔터 = 확인
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.dataset && e.target.dataset.run === 'input') {
+      e.preventDefault(); checkBlank(false);
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
